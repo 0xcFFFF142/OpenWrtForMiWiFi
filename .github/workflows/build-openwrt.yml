@@ -196,22 +196,6 @@ jobs:
         name: OpenWrt_packages${{ env.FILE_DATE }}
         path: openwrt/bin/packages
         
-    - name: Upload bin directory to GitHub
-      if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_TO_GITHUB == 'true'
-      env: 
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
-      run: |
-        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git config --global user.name "github-actions[bot]"
-        git clone -b bin https://github.com/MiRouter/OpenWrtForMiWiFi.git uploadfiles
-        cd $GITHUB_WORKSPACE/uploadfiles/bin
-        rm -Rf *
-        git rm --cache *
-        cp -rf $GITHUB_WORKSPACE/openwrt/bin/* $GITHUB_WORKSPACE/uploadfiles/bin
-        cd ..
-        git add .
-        git commit -m "update$(TZ='Asia/Shanghai' date +@%Y%m%d)"
-        git push --quiet "https://${{ secrets.TOKEN }}@github.com/MiRouter/OpenWrtForMiWiFi" HEAD:bin
 
     - name: Organize files
       id: organize
